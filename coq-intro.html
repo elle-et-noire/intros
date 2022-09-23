@@ -71,7 +71,7 @@
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="6" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
 <p>ここで <code>Print MP.</code> を実行すると</p>
-<pre><code class="language-coq"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>MP = 
+<pre><code class="language-coq"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>MP =
 <span class="hljs-keyword">fun</span> (Pis : P) (PimpliesQ : P -&gt; Q) =&gt;
 PimpliesQ Pis
      : P -&gt; (P -&gt; Q) -&gt; Q
@@ -86,6 +86,10 @@ PimpliesQ Pis
 <p><code>MP</code>の型<code>P -&gt; (P -&gt; Q) -&gt; Q</code>は、<code>P</code>型の値と<code>P-&gt;Q</code>型の値(関数)を受け取って<code>Q</code>型の値を返す関数、を意味する。</p>
 <p>これを、「Pという言明の証明とP-&gt;Qという言明の証明を受け取ってQという言明の証明を作る」ことと同一視する。<br />
 　　　　　　　　　　　　　　　　　　　→ <strong>Curry-Howard同型対応</strong></p>
+<p>（はじめから</p>
+<pre><code class="language-coq"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">Definition</span> MP := <span class="hljs-keyword">fun</span> (x : P) (y : P -&gt; Q) =&gt; y x.
+</span></span></foreignObject></svg></code></pre>
+<p>としても同じ。証明が長くなってくるとそれは困難。）</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="8" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
 <h1>Curry-Howard同型対応における解釈</h1>
@@ -115,12 +119,54 @@ PimpliesQ Pis
 </tr>
 <tr>
 <td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∃</mi><mi>x</mi><mspace></mspace><mspace width="0.1111111111111111em"/><mo lspace="0em" rspace="0.17em"></mo><mtext> ⁣</mtext><mo lspace="0em" rspace="0em">:</mo><mspace width="0.3333333333333333em"/><mi>A</mi><mo separator="true">,</mo><mi>B</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\exists x \colon A, B(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∃</span><span class="mord mathnormal">x</span><span class="mspace nobreak"></span><span class="mspace" style="margin-right:0.1111111111111111em;"></span><span class="mpunct"></span><span class="mspace" style="margin-right:-0.16666666666666666em;"></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord"><span class="mrel">:</span></span><span class="mspace" style="margin-right:0.3333333333333333em;"></span><span class="mord mathnormal">A</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></td>
-<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span>の証明<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>からの<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">B(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span>の構成方法の集合（依存型）</td>
+<td style="text-align:center"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal">A</span></span></span></span>の証明<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>と<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">B(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span>のペアの集合（依存型）</td>
 </tr>
 </tbody>
 </table>
+<p>依存型は、証明の型が<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">x</span></span></span></span>に依存する。</p>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="9" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
+<h1>帰納的に定義される型</h1>
+<p><code>Print bool.</code>を行うと</p>
+<pre><code class="language-coq"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">Inductive</span> bool : <span class="hljs-keyword">Set</span> :=  true : bool | <span class="hljs-type">false</span> : bool.
+</span></span></foreignObject></svg></code></pre>
+<p>と表示される。<code>true</code>と<code>false</code>が<code>bool</code>型を構成していてその他にはない、と分かる。</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
+<p>自然数も帰納的に定義されている。<code>Print nat.</code>を行うと</p>
+<pre><code class="language-nat"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap>Inductive nat : Set :=  O : nat | S : nat -&gt; nat.
+</span></span></foreignObject></svg></code></pre>
+<ul>
+<li><code>O</code>（これは<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn></mrow><annotation encoding="application/x-tex">0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">0</span></span></span></span>のこと）は<code>nat</code>型で</li>
+<li><code>nat</code>型の値に<code>S</code>を作用させたものも<code>nat</code>型で</li>
+<li>それらだけが<code>nat</code>型である</li>
+</ul>
+<p>ことが分かる。</p>
+<p><code>S</code>を作用させることは次に大きい自然数を作ることに対応している。<br />
+<code>O</code>↔0, <code>S O</code>↔1, <code>S (S O)</code>↔2, <code>S (S (S O))</code>↔3......。</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="11" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
+<p>命題としての<code>True</code>, <code>False</code>（<code>bool</code>型の<code>true</code>, <code>false</code>とは異なる）や<code>and</code>, <code>or</code>も帰納的に定義されている。</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="12" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
+<h1>SSReflect</h1>
+<ul>
+<li>
+<p>Coq には標準ライブラリに加えて，SSReflect，MathComp という強力なライブラリがある．（この2つは現在は同じライブラリとしてまとめられている．）</p>
+</li>
+<li>
+<p>このライブラリを読み込むことで，定理だけでなく新しいタクティックまで導入することができる．</p>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
+<h1>Coq の効用</h1>
+<ul>
+<li>とても長大で，全てを人間が検査することが難しい証明の正しさを保証できる．（例．四色定理，奇数位数定理）</li>
+<li>ソフトウェアにバグがないことを保証できる．（例：CompCert）</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
 <h1>リンク集</h1>
 <ul>
 <li>
@@ -141,7 +187,7 @@ PimpliesQ Pis
 </li>
 </ul>
 </section>
-</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="15" data-class="invert" data-theme="gaia" class="invert" style="--class:invert;--theme:gaia;">
 <h1>参考文献</h1>
 <ul>
 <li><a href="https://www.morikita.co.jp/books/mid/006241">萩原学/アフェルト・レナルド『Coq/SSReflect/MathComp による定理証明』(森北出版，2018)</a>　必携。</li>
