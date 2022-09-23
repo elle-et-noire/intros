@@ -42,3 +42,65 @@ Coq 8.8.0 まではインストーラが用意されている。最新は 8.16.0
 
 - [**Emacs** 上で **Proof General** を動かす手段](https://www.aise.ics.saitama-u.ac.jp/~gotoh/Coq-SSReflect-MathCompOnUbuntu2004.html)もあるらしい。
 
+- [**jsCoq**](https://coq.vercel.app/scratchpad.html)：ブラウザ上で動くCoq。
+
+
+---
+# まずは簡単な例。
+
+```coq
+Section ModusPonens.
+Variables P Q : Prop.
+Theorem MP : P -> (P -> Q) -> Q.
+Proof.
+  intros Pis PimpliesQ.
+  apply PimpliesQ.
+  apply Pis.
+Qed.
+```
+
+VSCoq, jsCoq上では`Alt+↓`で１文ずつ証明が読み込まれる。
+
+---
+ここで `Print MP.` を実行すると
+```coq
+MP = 
+fun (Pis : P) (PimpliesQ : P -> Q) =>
+PimpliesQ Pis
+     : P -> (P -> Q) -> Q
+
+Arguments MP _ _%function_scope
+```
+のように表示される。
+
+つまり`MP`とは、引数として`Pis`(値)と`PimpliesQ`(関数)を受け取って`PimpliesQ Pis`を返す関数。
+
+---
+Coqの(正確には**Gallina**の)書式は`変数名 : 型`。
+
+`MP`の型`P -> (P -> Q) -> Q`は、`P`型の値と`P->Q`型の値(関数)を受け取って`Q`型の値を返す関数、を意味する。
+
+これを、「Pという言明の証明とP->Qという言明の証明を受け取ってQという言明の証明を作る」ことと同一視する。
+　　　　　　　　　　　　　　　　　　　→ **Curry-Howard同型対応**
+
+
+
+---
+# リンク集
+- [Coq クィックリファレンス](https://magicant.github.io/programmingmemo/coq/)
+  　事例集をみればとりあえず証明が書ける。
+
+- [TopProver](https://top-prover.top/)
+  　競プロのCoq版。最近はコンテストは開かれていないが過去問で証明の練習ができる。
+
+- [Coq/SSReflect/MathComp Tutorial](https://staff.aist.go.jp/reynald.affeldt/ssrcoq/)
+　スライドとかExample がいろいろ載ってる。
+
+- [ソフトウェアの基礎](http://proofcafe.org/sf/toc.html)
+　網羅的に勉強できそう。
+
+---
+# 参考文献
+
+- [萩原学/アフェルト・レナルド『Coq/SSReflect/MathComp による定理証明』(森北出版，2018)](https://www.morikita.co.jp/books/mid/006241)　必携。
+- [定理証明支援系 Coq による形式検証（PDF）](https://staff.aist.go.jp/reynald.affeldt/ssrcoq/coq-kyoto2015.pdf)
