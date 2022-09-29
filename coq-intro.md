@@ -24,9 +24,9 @@ section {
 
 ---
 # インストール
-Coq 8.8.0 まではインストーラが用意されている。最新は 8.16.0
+Coq 8.15 まではインストーラが用意されている。最新は 8.16
 
-- **新しさより簡単さ重視する人**：[レポジトリ](https://github.com/coq/coq/releases/tag/V8.8.0)からインストーラを入手
+- **新しさより簡単さ重視する人**：[レポジトリ](https://github.com/coq/platform/releases)からインストーラを入手
 
 - **最新版を入れたい人**：[Coq/SSReflect/MathCompの設定](https://staff.aist.go.jp/reynald.affeldt/ssrcoq/install.html#org35ada1b)に従う
   - `sudo apt get install`でなく`sudo apt install`
@@ -138,6 +138,10 @@ Inductive nat : Set :=  O : nat | S : nat -> nat.
 - このライブラリを読み込むことで，定理だけでなく新しいタクティックまで導入することができる．
 
 ---
+# move
+- `move=>->` : `intro TMP; rewrite TMP; clear TMP`。`move->`とも書ける。
+
+---
 # Coq の効用
 
 - とても長大で，全てを人間が検査することが難しい証明の正しさを保証できる．（例．四色定理，奇数位数定理）
@@ -157,6 +161,10 @@ Inductive nat : Set :=  O : nat | S : nat -> nat.
 
 - [ソフトウェアの基礎](http://proofcafe.org/sf/toc.html)
 　網羅的に勉強できそう。
+
+---
+# リンク集2
+- [Coq/SSReflect/MathCompの文献](https://qiita.com/suharahiromichi/items/c6fcc3b03594cfa1796f)
 
 ---
 # 参考文献
