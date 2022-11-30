@@ -5,24 +5,29 @@ class: invert
 ---
 <style>
 section {
-  background:linear-gradient(to right, #4c8590, #734b85); 
+  background:linear-gradient(to right, #2c4560, #23453b);
+  justify-content: start;
 }
 </style>
 
 # Julia 入門
 
 ---
-<!-- paginate: true -->
 # Julia とは
-参考：[Julia in a Nutshell](https://julialang.org/), [なぜ僕らはJuliaを作ったか](https://www.geidai.ac.jp/~marui/julialang/why_we_created_julia/index.html)
 
-### 速い
-LLVM を利用してネイティブコードを生成する（らしい）
-### 簡単に書ける
-動的型付けのおかげで気軽に書ける。対話環境も充実。
-### いろいろな構成に対応
-多重ディスパッチでOOP（構造体に関数が作用する書き方）や関数型っぽく書ける
-### そして[オープンソース](https://github.com/JuliaLang/julia)
+**速い**
+- LLVM を利用してネイティブコードを生成する（らしい）
+
+**簡単に書ける**
+- 動的型付けのおかげで気軽に書ける。対話環境も充実。
+
+**いろいろな構成に対応**
+- 多重ディスパッチでOOP（構造体に関数が作用する書き方）や関数型っぽく書ける
+
+**そして[オープンソース](https://github.com/JuliaLang/julia)**
+
+<!-- 参考：[Julia in a Nutshell](https://julialang.org/), [なぜ僕らはJuliaを作ったか](https://www.geidai.ac.jp/~marui/julialang/why_we_created_julia/index.html) -->
+<div style="text-align: right"> 参考 <a href="https://julialang.org/">Julia in a Nutshell</a>, <a href="https://www.geidai.ac.jp/~marui/julialang/why_we_created_julia/index.html">なぜ僕らはJuliaを作ったか</a> </div>
 
 ---
 # インストール
@@ -69,7 +74,6 @@ LLVM を利用してネイティブコードを生成する（らしい）
 | `⊻` | XOR | `\xor`+Tab | `≥` | 大なり(`>=`) | `\ge`+Tab |
 | `//` | 分数 |  | `≢ ` | 不等(`!==`) | `\nequiv`+Tab |
 
-- ~~`≠`は`\neq`ではなく`\ne`
 - **数値リテラル係数**：係数が数値なら掛け算の '*' を略せる。`x=1; √2^2x^2+(x-1)x`
 
 

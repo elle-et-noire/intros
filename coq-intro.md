@@ -1,12 +1,12 @@
 ---
 marp: true
-# backgroundColor: orange
-theme: gaia
+theme: default
 class: invert
 ---
 <style>
 section {
-  background:linear-gradient(60deg, #4c8590, #734b85);
+  background:linear-gradient(60deg, #2c4560, #23453b);
+  justify-content: start;
 }
 </style>
 
@@ -24,13 +24,14 @@ section {
 
 ---
 # インストール
-Coq 8.15 まではインストーラが用意されている。最新は 8.16
+以下のどちらかを選択。
 
-- **新しさより簡単さ重視する人**：[レポジトリ](https://github.com/coq/platform/releases)からインストーラを入手
+- **インストーラ**：[レポジトリ](https://github.com/coq/platform/releases)から入手できる。バージョンは遅れがち。
 
-- **最新版を入れたい人**：[Coq/SSReflect/MathCompの設定](https://staff.aist.go.jp/reynald.affeldt/ssrcoq/install.html#org35ada1b)に従う
+- **opam**：[Coq/SSReflect/MathCompの設定](https://staff.aist.go.jp/reynald.affeldt/ssrcoq/install.html#org35ada1b)に従って入れる。
   - `sudo apt get install`でなく`sudo apt install`
   - WSLでは「新しいライブラリの設定が要るかも」の箇所で`sudo apt install -y libgmp-dev`が必要だった([参考](https://www.aise.ics.saitama-u.ac.jp/~gotoh/Coq-SSReflect-MathCompOnUbuntu2004.html))
+  - `opam update`でアップデートできる（ビルドにかなり時間がかかるので注意）。
 
 ---
 # エディタ
@@ -81,13 +82,13 @@ Coqの(正確には**Gallina**の)書式は`変数名 : 型`。
 `MP`の型`P -> (P -> Q) -> Q`は、`P`型の値と`P->Q`型の値(関数)を受け取って`Q`型の値を返す関数、を意味する。
 
 これを、「Pという言明の証明とP->Qという言明の証明を受け取ってQという言明の証明を作る」ことと同一視する。
-　　　　　　　　　　　　　　　　　　　→ **Curry-Howard同型対応**
+<div style="text-align: right; font-weight:bold">→ Curry-Howard同型対応</div>
 
 （はじめから
 ```coq
 Definition MP := fun (x : P) (y : P -> Q) => y x.
 ```
-としても同じ。証明が長くなってくるとそれは困難。）
+のようにGallinaの項を与えても同じ。証明が長くなってくると困難。）
 
 
 ---
@@ -109,7 +110,7 @@ Definition MP := fun (x : P) (y : P -> Q) => y x.
 ```coq
 Inductive bool : Set :=  true : bool | false : bool.
 ```
-と表示される。`true`と`false`が`bool`型を構成していてその他にはない、と分かる。
+と表示される。`bool`型は`true`と`false`から構成されている。
 
 ---
 自然数も帰納的に定義されている。`Print nat.`を行うと
