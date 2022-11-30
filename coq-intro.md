@@ -4,7 +4,9 @@ theme: default
 class: invert
 ---
 <style>
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+JP");
 section {
+  font-family: "Noto Sans JP";
   background:linear-gradient(60deg, #2c4560, #23453b);
   justify-content: start;
 }
