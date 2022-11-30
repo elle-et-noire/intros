@@ -38,20 +38,19 @@ section {
 
 ### Jupyter でも使いたい人（参考：[Jupyter NotebookeでJuliaを使ってみた](https://note.com/char_mi/n/nf8fc1b83591d)）
 - [`conda` コマンドから julia をインストールする方法](https://qiita.com/MTNakata/items/54b8c0fc49df4d026eef)もあるらしい（インストールしてしまえば「直接」と同じ状況のはず）
-- ] キーでパッケージモードに移って `add IJulia`
+- `]` でパッケージモードに移って `add IJulia`
 - Backspace で julia モードに戻って `using IJulia; notebook()` で起動
 
 ---
-# REPL の使い方
+# [REPL の使い方](https://docs.julialang.org/en/v1/stdlib/REPL/)
 - `exit()` か Ctrl+D で終了
-- ] で **パッケージモード**
-- ? で **ヘルプモード**
+- `]` で **パッケージモード**（`?`でパッケージモードのヘルプ）
+- `?` で **ヘルプモード**
 - BackSpace で **julia モード** に戻る
-- パッケージの追加：
-  - (パッケージモード) `add パッケージ名`
-  - (julia モード) `using Pkg; Pkg.add("パッケージ名")` (import でも同じ)
-- インストールしたパッケージの確認：`Pkg.status()`
-- パッケージのアップデート：`Pkg.update()`
+- パッケージの追加： `add $(name)`（パッケージモード）、`using Pkg; Pkg.add($(name))`（julia モード） （以下同じ）
+- インストールしたパッケージの確認：`status`
+- パッケージのアップデート：`update`
+- プロジェクトの作成、アクティベート：`generate $(name)`、`activate $(name)`（`activate`で抜けられる）
 
 ---
 # REPL を使いこなそう
@@ -170,7 +169,7 @@ Dict(i => i ^ 3 for i = 1:10)
 
 ---
 # グラフをプロット
-- ] でパッケージモードに移って `add Plots` で Plots パッケージをインストール（数分かかる）
+- `]` でパッケージモードに移って `add Plots` で Plots パッケージをインストール（数分かかる）
 ```julia
 x = -5.0:0.1:5.0 # -5から5まで0.1刻み
 f(x) = 1 ./ (1 .+ exp.(-x)) # xの各要素にシグモイド関数を作用させる
@@ -180,7 +179,8 @@ using Plots
 plot(x, y)
 savefig("Sigmoid.png") # 画像保存
 ```
-なぜか画像保存以外ではグラフを見られない（Jupyter なら可能）
+- Backendに`Plots.plotly()`を設定するとグラフをぐりぐりできる。
+
 
 ---
 # アニメーション
@@ -218,7 +218,7 @@ gif(anim, "sigmoid_anim.gif", fps = 5)
 - [Prime number functions](https://juliamath.github.io/Primes.jl/stable/api/) 詳細。公式。
 
 ---
-# フィッティング
+# フィッティング（[LsqFit.jl](https://julianlsolvers.github.io/LsqFit.jl/latest/)）
 ```julia
 using LsqFit, Plots
 xdata = [5:0.2:10.8;]
@@ -236,13 +236,17 @@ plot(xdata, ydata, seriestype = :scatter)
 plot!([5:0.02:10.8;], func([5:0.02:10.8;], fit.param))
 savefig("lsqfit-sample.png")
 ```
-詳しく -> [LsqFit.jl](https://julianlsolvers.github.io/LsqFit.jl/latest/)
+
+---
+# [UpdateJulia.jl](https://docs.julialang.org/en/v1/stdlib/REPL/)
+Juliaのアップデートをコマンド1つで行える。
 
 ---
 # さらに詳しく
 - [Julia 1.0 ドキュメント](https://mnru.github.io/julia-doc-ja-v1.0/index.html) 有志による一部日本語化ドキュメント。最新は 1.6.4 なので内容は古いかもしれないが、基本的な言語仕様は同じ？
-- [Julia 1.6 Documentation](https://docs.julialang.org/en/v1/) 困ったら公式。英語。
+- [Julia Documentation](https://docs.julialang.org/en/v1/) 困ったら公式。英語。
 - [Juliaで数値計算　その1：コードサンプル〜基本的計算編〜](https://qiita.com/cometscome_phys/items/31d0b811345a3e12fcef) 紹介しきれていない入門的な事項も書かれている。
+- [Juila in VS Code](https://www.julia-vscode.org/docs/dev/) JuliaとVSCodeは切っても切り離せない。
 # 参考文献
 - [Julia言語プログラミング入門](http://itref.fc2web.com/lang/julia/)
 - [REPL (julia コマンド) の使い方](http://nalab.mind.meiji.ac.jp/~mk/labo/text/julia-memo/node6.html)
