@@ -7,6 +7,7 @@ class: invert
 @import url("https://fonts.googleapis.com/css?family=Noto+Sans+JP");
 section {
   font-family: "Noto Sans JP";
+  font-size: 26px;
   background:linear-gradient(60deg, #2c4560, #23453b);
   justify-content: start;
 }
@@ -53,16 +54,17 @@ section {
 
 ---
 # Rustでは**所有権**を通してオブジェクトに触る
-- `let a = 10;` によって変数`a`がオブジェクト`10`の（**不変**な）所有権を得る
-- `let mut b = 20;` で**可変**な所有権を得る
-- `let aref = &a;`によって不変な**参照**（仮の所有権の一種）を得る
-- `let bref = &mut b;`で可変な参照を得る。代入は`*b = 20;`など
-- `let mut c = a;`でも可変な所有権を得られる
+- スコープを抜ける or 所有権を渡すともとの変数が持っていた所有権は消失する。**参照**を渡すとよい
+- 所有権がすべて失われるとオブジェクトが破棄される
+
+|  | 不変 | 可変 |
+|:-:|:-:|:-:|
+| 原本 | `let a = 10;` |`let mut b = 20;`|
+| 参照 |`let aref = &a;`|`let bref = &mut b;`|
+
 - 関数呼び出し時に**借用チェック**がクリアされる必要がある
   - 不変参照と可変参照が同時に存在しない
   - 可変参照は1つしか存在しない
-- スコープを抜けるとその変数が持っていた所有権は消失する
-- 所有権がすべて失われるとオブジェクトが消失する
 
 ---
 # コピートレイト
@@ -174,6 +176,80 @@ fn main() {
 
 - `.0`などでアクセスする
 - 要素の分解もできる
+
+---
+# メソッド、関連関数
+```rust
+struct Cmplx { real: f32, imag: f32 }
+impl Cmplx {
+  fn abs(&self) -> f32 { self.real * self.real + self.imag * self.imag }
+  fn new(real: f32, imag: f32) -> Self { Self { real, imag } }
+}
+fn main() {
+  let z = Cmplx::new(3., 5.);
+  println!("{}", z.abs());
+}
+```
+- 書き換えるときは`&self`の代わりに`&mut self`
+- `self`だと呼び出し元のオブジェクトの所有権がメソッドに渡り、元の場所でそのオブジェクトを使えなくなる
+- `Self`は型エイリアス
+
+---
+# 列挙型
+```rust
+enum OpticalDisc { CD(u32), BD(String, u32) }
+fn main() {
+  let bd = OpticalDisc::BD(String::from("ROM"), 120);
+}
+```
+- 列挙子に値を持たせられる。持たせる値の型は列挙子ごとに違っていていい
+- メソッドも定義できるしトレイトも実装できる
+- 列挙子に持たせたオブジェクトは`match`文で取り出せる
+
+---
+# ジェネリクス
+```rust
+use std::f32::consts::PI;
+enum OpticalDisc<T> { CD(T), BD(String, T) }
+impl<T> OpticalDisc<T> {
+  fn newBD(r:T) -> OpticalDisc<T> {
+    OpticalDisc::BD(String::from(""), r)
+} }
+impl OpticalDisc<f32> {
+  fn area(&self) -> f32 {
+    match *self {
+      OpticalDisc::CD(r) => r.powi(2) * PI / 4.,
+      OpticalDisc::BD(_, r) => r.powi(2) * PI / 4.
+} } }
+fn main() {
+  let bd = OpticalDisc::<f32>::newBD(120.);
+  println!("area of bd is {}", bd.area());
+}
+```
+
+---
+- ジェネリック型：任意の型を受け取れるようにしてコードの重複を回避する仕組み
+- ジェネリック型のメソッドを定義できる。特定の型のときのメソッドを定義することもできる
+- コンパイル時は型が分かるので型に特化したコードが生成される（**単相化**）
+- **turbofish演算子**`::<...>`で型を明示的に指定できる
+
+
+---
+# パターンマッチ
+```rust
+fn main() {
+  let a: Option<String> = Some(String::from("hello"));
+  match a {
+      Some(x) => println!("{}", x), // move ownership
+      None => ()
+  }
+  println!("{:?}", a);
+}
+```
+
+- パターンマッチはマッチした腕だけが評価される（短絡評価）
+- 残りのパターンは`_`で受け取れる
+- パターンマッチで所有権が移る
 
 ---
 # 参考文献
