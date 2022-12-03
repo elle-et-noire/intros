@@ -16,18 +16,19 @@ section {
 # Rust 入門
 
 ---
-# Rust とは
+# [Rust](https://www.rust-lang.org/ja) とは
 
 **速い**
-- LLVM を利用してネイティブコードを生成する（らしい）
+- C++と同じくらい速いらしい。ガベージコレクションがない
 
-**簡単に書ける**
-- 動的型付けのおかげで気軽に書ける。対話環境も充実。
+**安全**
+- 所有権の概念のおかげで（ガベージコレクションがなくても）メモリ安全、スレッド安全
 
-**いろいろな構成に対応**
-- 多重ディスパッチでOOP（構造体に関数が作用する書き方）や関数型っぽく書ける
+**生産性が高い（らしい）**
+**マルチパラダイム**
+- 手続き的にも関数型的にも書ける
 
-**そして[オープンソース](https://github.com/JuliaLang/julia)**
+**そして[オープンソース](https://github.com/rust-lang/rust)**
 
 ---
 # インストール
@@ -40,6 +41,8 @@ section {
 
 - `cargo --version`でバージョンが表示されればOK
 - 適宜 VSCode の拡張機能を入れる（[rust-analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer), [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)）
+
+インストールしなくても[Rust Playground](https://play.rust-lang.org/)でコードを実行できる
 
 ---
 # VSCodeでのデバッグ、実行
