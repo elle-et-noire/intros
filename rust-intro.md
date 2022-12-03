@@ -205,6 +205,12 @@ fn main() {
 - 列挙子に値を持たせられる。持たせる値の型は列挙子ごとに違っていていい
 - メソッドも定義できるしトレイトも実装できる
 - 列挙子に持たせたオブジェクトは`match`文で取り出せる
+### デフォルトで用意される列挙型の例
+
+```rust
+enum Option<T> = { Some(T), None }
+enum Result<T, E> = { Ok(T), Err(E) }
+```
 
 ---
 # ジェネリクス
@@ -238,19 +244,139 @@ fn main() {
 # パターンマッチ
 ```rust
 fn main() {
-  let a: Option<String> = Some(String::from("hello"));
+  let a: Option<String> = Some(String::from("guee"));
   match a {
-      Some(x) => println!("{}", x), // move ownership
-      None => ()
+      Some(ref x) => println!("{}", x),
+      _ => {println!("uouo"); ()}
   }
   println!("{:?}", a);
 }
 ```
 
 - パターンマッチはマッチした腕だけが評価される（短絡評価）
-- 残りのパターンは`_`で受け取れる
-- パターンマッチで所有権が移る
+- 残りのパターンは`_`で一括して受け取れる
+- パターンマッチで所有権が移るので、参照でマッチさせるのがよい。
+- `_`以外が1つなら`if let Some (ref x) = a {println!("{}", x)}`のように短く書ける
+- **マッチガード**：`識別子 条件 =>`のように条件を追加できる
+
+---
+# 自然数？
+```rust
+enum Nat { S(Box<Nat>), O }
+fn main() {
+  let one = Nat::S(Box::new(Nat::O));
+}
+```
+
+---
+# エラー処理、コンビネータ
+- `panic!("メッセージ")`でメッセージとともに強制終了できる
+- `option.unwrap()`は内部で`match option { Some(v) => v, None=>panic!(...) }`のような処理をしてくれる
+  - `Result`型についても使える
+  - `expcept`ならメッセージも追加できる
+- `?`演算子を`Option`,`Result`型に作用させて、値がないときに呼び出し元に返す処理を実現できる。
+- `let ret = open()?.read()?.replace()?.write()?.close()?;`みたく書ける（**コンビネータ**）
+- `map`,`and_then`などを活用して簡潔に書ける
+
+---
+# トレイト（インターフェースみたいなもの）
+```rust
+struct Cmplx { real: f32, imag: f32 }
+pub trait Distance {
+  fn abs(&self) -> f32;
+  fn name(&self) -> &str { return "Distance" }
+}
+impl Distance for Cmplx {
+  fn abs(&self) -> f32 {
+    self.real.powi(2) + self.imag.powi(2)
+  }
+  fn name(&self) -> &str { return "Complex" }
+}
+fn main() {
+  let z = Cmplx { real: 1., imag: 2. };
+  println!("{} abs={}", z.name(), z.abs());
+}
+```
+
+---
+- 構造体にトレイトの実装を付与できる（構造体をトレイトのインスタンスにする）
+- デフォルトメソッドをオーバーライドできる
+- トレイトはトレイトを継承できる：`pub trait Comparable : Distance{ ... }`
+- トレイト境界を指定できる：`fn comp<T: Distance>(d1: &T, d2: &T) { ... }`
+  - `fn name:(d1: &impl Distance)`,
+  - `fn comp(d1: &T, d2: &T) where T: Distance`のようにも書ける
+  - `+`で複数のトレイトを指定できる
+  - ジェネリック型にもトレイト境界を設定できる
+
+---
+# derive属性、Fromトレイト
+```rust
+#[derive(Debug)]
+struct Cmplx { real: f32, imag: f32 }
+impl From<f32> for Cmplx {
+  fn from(real: f32) -> Self {
+    Cmplx { real, imag: 0. }
+  }
+}
+fn main() {
+  let z = Cmplx::from(1.);
+  let w: Cmplx = (2.).into();
+  println!("{:?} {:?}", z, w);
+}
+```
+- 実装したいトレイトを型の定義時に指定できる
+  - よく使われるトレイト：`Copy`,`Clone`,`Debug`,`(Partial)Eq`,`(Partial)Ord`
+- `From`トレイトを実装すると`into`メソッドが使える
+
+---
+# メモリについて
+- リソースの確保、解放とオブジェクトの生成、破棄が同時
+- `*`（参照外し：参照先のオブジェクトを操作する）は`Deref`トレイト（可変なら`DerefMut`）を実装すると実現できる
+- `Drop`トレイトを実装して参照破棄時の挙動を設定できる
+- メモリ領域は3種類ある
+  - **データメモリ**：静的データを格納する
+  - **スタックメモリ**：関数呼び出し時の引数などの一時的なデータを格納する
+  - **ヒープメモリ**：`Box::new(...)`に渡されたオブジェクトが格納される
+- **参照カウンタ**：原本の所有権が破棄されても仮の所有権を保持できる。`Rc::clone`に参照を渡せばよい。
+
+---
+# 内部可変性 （`use std::cell::Cell;`）
+- コピートレイトを実装した型を内部可変にするとき
+  - `let a = Cell::new(10);`で作成、`a.get()`で取り出し、`a.set(20)`で代入
+  - `a.replace(20)`はpopしてpush、`a.into_inner`で内部オブジェクトを取り出す
+  - 不変・可変の検査が（コンパイル時ではなく）実行時に行われる（？）
+- else
+  - `RefCell`を使う
+  - `.borrow()`で不変参照、`.borrow_mut()`で可変参照が返される
+  - 可変・不変参照が満たすべき条件は（実行時に）満たしている必要がある
+
+---
+# クロージャ（無名関数）
+```rust
+fn returns_closure() -> impl Fn(i32) -> i32 {
+  |x| x + 1
+}
+fn main() {
+  println!("{}", returns_closure()(2));
+}
+```
+- クロージャは動的サイズ型なので`impl`を外すとまずい
+- `impl`の代わりに`Box< ... >`を使ってもよい
+
+---
+# 並列処理
+
+---
+# マクロ
+- 接尾辞`!`がつく
+
+---
+# イテレータ
+
+
+
 
 ---
 # 参考文献
 - [Rust入門](https://zenn.dev/mebiusbox/books/22d4c1ed9b0003)
+- [Rust入門（PDF）](https://github.com/mebiusbox/docs/blob/master/Rustjp.pdf)
