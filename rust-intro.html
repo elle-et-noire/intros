@@ -260,6 +260,10 @@
 <li>メソッドも定義できるしトレイトも実装できる</li>
 <li>列挙子に持たせたオブジェクトは<code>match</code>文で取り出せる</li>
 </ul>
+<h3>デフォルトで用意される列挙型の例</h3>
+<pre><code class="language-rust"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Option</span></span>&lt;T&gt; = { <span class="hljs-literal">Some</span>(T), <span class="hljs-literal">None</span> }
+<span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Result</span></span>&lt;T, E&gt; = { <span class="hljs-literal">Ok</span>(T), <span class="hljs-literal">Err</span>(E) }
+</span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="17" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>ジェネリクス</h1>
@@ -292,24 +296,169 @@
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>パターンマッチ</h1>
 <pre><code class="language-rust"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
-  <span class="hljs-keyword">let</span> a: <span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">String</span>&gt; = <span class="hljs-literal">Some</span>(<span class="hljs-built_in">String</span>::from(<span class="hljs-string">&quot;hello&quot;</span>));
+  <span class="hljs-keyword">let</span> a: <span class="hljs-built_in">Option</span>&lt;<span class="hljs-built_in">String</span>&gt; = <span class="hljs-literal">Some</span>(<span class="hljs-built_in">String</span>::from(<span class="hljs-string">&quot;guee&quot;</span>));
   <span class="hljs-keyword">match</span> a {
-      <span class="hljs-literal">Some</span>(x) =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{}&quot;</span>, x), <span class="hljs-comment">// move ownership</span>
-      <span class="hljs-literal">None</span> =&gt; ()
+      <span class="hljs-literal">Some</span>(<span class="hljs-keyword">ref</span> x) =&gt; <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{}&quot;</span>, x),
+      _ =&gt; {<span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;uouo&quot;</span>); ()}
   }
   <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{:?}&quot;</span>, a);
 }
 </span></span></foreignObject></svg></code></pre>
 <ul>
 <li>パターンマッチはマッチした腕だけが評価される（短絡評価）</li>
-<li>残りのパターンは<code>_</code>で受け取れる</li>
-<li>パターンマッチで所有権が移る</li>
+<li>残りのパターンは<code>_</code>で一括して受け取れる</li>
+<li>パターンマッチで所有権が移るので、参照でマッチさせるのがよい。</li>
+<li><code>_</code>以外が1つなら<code>if let Some (ref x) = a {println!(&quot;{}&quot;, x)}</code>のように短く書ける</li>
+<li><strong>マッチガード</strong>：<code>識別子 条件 =&gt;</code>のように条件を追加できる</li>
 </ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>自然数？</h1>
+<pre><code class="language-rust"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">Nat</span></span> { S(<span class="hljs-built_in">Box</span>&lt;Nat&gt;), O }
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+  <span class="hljs-keyword">let</span> one = Nat::S(<span class="hljs-built_in">Box</span>::new(Nat::O));
+}
+</span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>エラー処理、コンビネータ</h1>
+<ul>
+<li><code>panic!(&quot;メッセージ&quot;)</code>でメッセージとともに強制終了できる</li>
+<li><code>option.unwrap()</code>は内部で<code>match option { Some(v) =&gt; v, None=&gt;panic!(...) }</code>のような処理をしてくれる
+<ul>
+<li><code>Result</code>型についても使える</li>
+<li><code>expcept</code>ならメッセージも追加できる</li>
+</ul>
+</li>
+<li><code>?</code>演算子を<code>Option</code>,<code>Result</code>型に作用させて、値がないときに呼び出し元に返す処理を実現できる。</li>
+<li><code>let ret = open()?.read()?.replace()?.write()?.close()?;</code>みたく書ける（<strong>コンビネータ</strong>）</li>
+<li><code>map</code>,<code>and_then</code>などを活用して簡潔に書ける</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>トレイト（インターフェースみたいなもの）</h1>
+<pre><code class="language-rust"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Cmplx</span></span> { real: <span class="hljs-built_in">f32</span>, imag: <span class="hljs-built_in">f32</span> }
+<span class="hljs-keyword">pub</span> <span class="hljs-class"><span class="hljs-keyword">trait</span> <span class="hljs-title">Distance</span></span> {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">abs</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">f32</span>;
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">name</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; &amp;<span class="hljs-built_in">str</span> { <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Distance&quot;</span> }
+}
+<span class="hljs-keyword">impl</span> Distance <span class="hljs-keyword">for</span> Cmplx {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">abs</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; <span class="hljs-built_in">f32</span> {
+    <span class="hljs-keyword">self</span>.real.powi(<span class="hljs-number">2</span>) + <span class="hljs-keyword">self</span>.imag.powi(<span class="hljs-number">2</span>)
+  }
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">name</span></span>(&amp;<span class="hljs-keyword">self</span>) -&gt; &amp;<span class="hljs-built_in">str</span> { <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Complex&quot;</span> }
+}
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+  <span class="hljs-keyword">let</span> z = Cmplx { real: <span class="hljs-number">1</span>., imag: <span class="hljs-number">2</span>. };
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{} abs={}&quot;</span>, z.name(), z.abs());
+}
+</span></span></foreignObject></svg></code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<ul>
+<li>構造体にトレイトの実装を付与できる（構造体をトレイトのインスタンスにする）</li>
+<li>デフォルトメソッドをオーバーライドできる</li>
+<li>トレイトはトレイトを継承できる：<code>pub trait Comparable : Distance{ ... }</code></li>
+<li>トレイト境界を指定できる：<code>fn comp&lt;T: Distance&gt;(d1: &amp;T, d2: &amp;T) { ... }</code>
+<ul>
+<li><code>fn name:(d1: &amp;impl Distance)</code>,</li>
+<li><code>fn comp(d1: &amp;T, d2: &amp;T) where T: Distance</code>のようにも書ける</li>
+<li><code>+</code>で複数のトレイトを指定できる</li>
+<li>ジェネリック型にもトレイト境界を設定できる</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>derive属性、Fromトレイト</h1>
+<pre><code class="language-rust"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-meta">#[derive(Debug)]</span>
+<span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">Cmplx</span></span> { real: <span class="hljs-built_in">f32</span>, imag: <span class="hljs-built_in">f32</span> }
+<span class="hljs-keyword">impl</span> <span class="hljs-built_in">From</span>&lt;<span class="hljs-built_in">f32</span>&gt; <span class="hljs-keyword">for</span> Cmplx {
+  <span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">from</span></span>(real: <span class="hljs-built_in">f32</span>) -&gt; <span class="hljs-keyword">Self</span> {
+    Cmplx { real, imag: <span class="hljs-number">0</span>. }
+  }
+}
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+  <span class="hljs-keyword">let</span> z = Cmplx::from(<span class="hljs-number">1</span>.);
+  <span class="hljs-keyword">let</span> w: Cmplx = (<span class="hljs-number">2</span>.).into();
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{:?} {:?}&quot;</span>, z, w);
+}
+</span></span></foreignObject></svg></code></pre>
+<ul>
+<li>実装したいトレイトを型の定義時に指定できる
+<ul>
+<li>よく使われるトレイト：<code>Copy</code>,<code>Clone</code>,<code>Debug</code>,<code>(Partial)Eq</code>,<code>(Partial)Ord</code></li>
+</ul>
+</li>
+<li><code>From</code>トレイトを実装すると<code>into</code>メソッドが使える</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>メモリについて</h1>
+<ul>
+<li>リソースの確保、解放とオブジェクトの生成、破棄が同時</li>
+<li><code>*</code>（参照外し：参照先のオブジェクトを操作する）は<code>Deref</code>トレイト（可変なら<code>DerefMut</code>）を実装すると実現できる</li>
+<li><code>Drop</code>トレイトを実装して参照破棄時の挙動を設定できる</li>
+<li>メモリ領域は3種類ある
+<ul>
+<li><strong>データメモリ</strong>：静的データを格納する</li>
+<li><strong>スタックメモリ</strong>：関数呼び出し時の引数などの一時的なデータを格納する</li>
+<li><strong>ヒープメモリ</strong>：<code>Box::new(...)</code>に渡されたオブジェクトが格納される</li>
+</ul>
+</li>
+<li><strong>参照カウンタ</strong>：原本の所有権が破棄されても仮の所有権を保持できる。<code>Rc::clone</code>に参照を渡せばよい。</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>内部可変性 （<code>use std::cell::Cell;</code>）</h1>
+<ul>
+<li>コピートレイトを実装した型を内部可変にするとき
+<ul>
+<li><code>let a = Cell::new(10);</code>で作成、<code>a.get()</code>で取り出し、<code>a.set(20)</code>で代入</li>
+<li><code>a.replace(20)</code>はpopしてpush、<code>a.into_inner</code>で内部オブジェクトを取り出す</li>
+<li>不変・可変の検査が（コンパイル時ではなく）実行時に行われる（？）</li>
+</ul>
+</li>
+<li>else
+<ul>
+<li><code>RefCell</code>を使う</li>
+<li><code>.borrow()</code>で不変参照、<code>.borrow_mut()</code>で可変参照が返される</li>
+<li>可変・不変参照が満たすべき条件は（実行時に）満たしている必要がある</li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="27" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>クロージャ（無名関数）</h1>
+<pre><code class="language-rust"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">returns_closure</span></span>() -&gt; <span class="hljs-keyword">impl</span> <span class="hljs-built_in">Fn</span>(<span class="hljs-built_in">i32</span>) -&gt; <span class="hljs-built_in">i32</span> {
+  |x| x + <span class="hljs-number">1</span>
+}
+<span class="hljs-function"><span class="hljs-keyword">fn</span> <span class="hljs-title">main</span></span>() {
+  <span class="hljs-built_in">println!</span>(<span class="hljs-string">&quot;{}&quot;</span>, returns_closure()(<span class="hljs-number">2</span>));
+}
+</span></span></foreignObject></svg></code></pre>
+<ul>
+<li>クロージャは動的サイズ型なので<code>impl</code>を外すとまずい</li>
+<li><code>impl</code>の代わりに<code>Box&lt; ... &gt;</code>を使ってもよい</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>並列処理</h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>マクロ</h1>
+<ul>
+<li>接尾辞<code>!</code>がつく</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
+<h1>イテレータ</h1>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="31" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>参考文献</h1>
 <ul>
 <li><a href="https://zenn.dev/mebiusbox/books/22d4c1ed9b0003">Rust入門</a></li>
+<li><a href="https://github.com/mebiusbox/docs/blob/master/Rustjp.pdf">Rust入門（PDF）</a></li>
 </ul>
 </section>
 <script>!function(){"use strict";const t="marpitSVGPolyfill:setZoomFactor,",e=Symbol();let r,o;function n(n){const i="object"==typeof n&&n.target||document,a="object"==typeof n?n.zoom:n;window[e]||(Object.defineProperty(window,e,{configurable:!0,value:!0}),window.addEventListener("message",(({data:e,origin:r})=>{if(r===window.origin)try{if(e&&"string"==typeof e&&e.startsWith(t)){const[,t]=e.split(","),r=Number.parseFloat(t);Number.isNaN(r)||(o=r)}}catch(t){console.error(t)}})));let l=!1;Array.from(i.querySelectorAll("svg[data-marpit-svg]"),(t=>{var e,n,i,s;t.style.transform||(t.style.transform="translateZ(0)");const c=a||o||t.currentScale||1;r!==c&&(r=c,l=c);const d=t.getBoundingClientRect(),{length:u}=t.children;for(let r=0;r<u;r+=1){const o=t.children[r],a=o.getScreenCTM();if(a){const t=null!==(n=null===(e=o.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==n?n:0,r=null!==(s=null===(i=o.y)||void 0===i?void 0:i.baseVal.value)&&void 0!==s?s:0,l=o.firstChild,{style:u}=l;u.transformOrigin||(u.transformOrigin=`${-t}px ${-r}px`),u.transform=`scale(${c}) matrix(${a.a}, ${a.b}, ${a.c}, ${a.d}, ${a.e-d.left}, ${a.f-d.top}) translateZ(0.0001px)`}}})),!1!==l&&Array.from(i.querySelectorAll("iframe"),(({contentWindow:e})=>{null==e||e.postMessage(`${t}${l}`,"null"===window.origin?"*":window.origin)}))}r=1,o=void 0;const i=(t,e,r)=>{if(t.getAttribute(e)!==r)return t.setAttribute(e,r),!0};function a({once:t=!1,target:e=document}={}){const r="Apple Computer, Inc."===navigator.vendor?[n]:[];let o=!t;const a=()=>{for(const t of r)t({target:e});!function(t=document){Array.from(t.querySelectorAll('svg[data-marp-fitting="svg"]'),(t=>{var e;const r=t.firstChild,o=r.firstChild,{scrollWidth:n,scrollHeight:a}=o;let l,s=1;if(t.hasAttribute("data-marp-fitting-code")&&(l=null===(e=t.parentElement)||void 0===e?void 0:e.parentElement),t.hasAttribute("data-marp-fitting-math")&&(l=t.parentElement),l){const t=getComputedStyle(l),e=Math.ceil(l.clientWidth-parseFloat(t.paddingLeft||"0")-parseFloat(t.paddingRight||"0"));e&&(s=e)}const c=Math.max(n,s),d=Math.max(a,1),u=`0 0 ${c} ${d}`;i(r,"width",`${c}`),i(r,"height",`${d}`),i(t,"preserveAspectRatio",getComputedStyle(t).getPropertyValue("--preserve-aspect-ratio")||"xMinYMin meet"),i(t,"viewBox",u)&&t.classList.toggle("__reflow__")}))}(e),o&&window.requestAnimationFrame(a)};return a(),()=>{o=!1}}const l=Symbol(),s=document.currentScript;((t=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(t[l])return t[l];const e=a({target:t}),r=()=>{e(),delete t[l]};Object.defineProperty(t,l,{configurable:!0,value:r})})(s?s.getRootNode():document)}();
