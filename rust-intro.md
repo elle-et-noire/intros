@@ -47,10 +47,13 @@ section {
 ---
 # VSCodeでのデバッグ、実行
 
-- `cargo new {project name}`でプロジェクトが作成される
+- `cargo new {project name}`でプロジェクトが作成される（あるいは`cargo init`でそのフォルダをプロジェクト化する）
 - **プロジェクトフォルダを**VSCodeで開き、ダイアログで`OK`, `Yes` を押すとlaunch.jsonが作られる（[参考](https://mebee.info/2022/07/24/post-74579/)）
 - 次から`F5`でデバッグ、`Ctrl+F5`で実行できるようになる
-- `rustc {filename}.rs`でビルドされる
+- `rustc {filename}.rs`でコンパイルされる
+- `cargo build`でビルド。`--release`オプションを付けられる
+- `cargo run`で（必要ならビルド+）実行
+
 
 ---
 # Rust の仕様
@@ -367,14 +370,48 @@ fn main() {
 - `impl`の代わりに`Box< ... >`を使ってもよい
 
 ---
+# コレクション
+- ヒープメモリに置かれる
+### Vec
+- `let v: Vec<i32> = Vec::new();`とか`let v = vec![1,2,3];`
+- `for i in &v { ... }`で取り出せる
+
+### String
+### HashMap（連想配列）
+```rust
+use std::collections::HashMap;
+let mut scores = HashMap::new();
+scores.insert(String::from("Blue"), 10);
+let score = scores.get(&String::from("Blue"));
+```
+
+---
+# イテレータ
+
+```rust
+fn main() {
+  let a1 = [1, 2, 3];
+  let a2 = [4, 5, 6];
+  let iter = a1.iter().zip(a2.iter().map(|x| x*x));
+  for (i, j) in iter {
+    println!("{}, {}", i, j); // 1, 16 \n 2, 25 \n 3, 36
+  }
+  let b = [0i32, 1, -3, 2, -4, 3, -1];
+  let possum = b.iter().filter(|x| x.is_positive()).fold(0, |acc, x| acc + x);
+  println!("{}", possum); // 6
+}
+```
+
+- `collect`, `enumerate`, `for_each`（イテレータを返さない）, `inspect`（`map`の副作用許可版）
+- `iter()`（`&self`を返す）の他に`iter_mut()`（`&mut self`）, `into_iter()`（`self`）などがある
+
+<!-- ---
 # 並列処理
 
 ---
 # マクロ
-- 接尾辞`!`がつく
+- 接尾辞`!`がつく -->
 
----
-# イテレータ
 
 
 ---
