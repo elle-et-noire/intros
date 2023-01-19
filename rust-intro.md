@@ -41,6 +41,7 @@ section {
 
 - `cargo --version`でバージョンが表示されればOK
 - 適宜 VSCode の拡張機能を入れる（[rust-analyzer](https://marketplace.visualstudio.com/items?itemName=matklad.rust-analyzer), [CodeLLDB](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)）
+- `rustup self update`,`rustup update`でアップデート
 
 インストールしなくても[Rust Playground](https://play.rust-lang.org/)でコードを実行できる
 
@@ -71,6 +72,23 @@ section {
 - 関数呼び出し時に**借用チェック**がクリアされる必要がある
   - 不変参照と可変参照が同時に存在しない
   - 可変参照は1つしか存在しない
+
+---
+#
+```
+fn main() {
+    let mut a = 10;           // mutable object
+    let a_ref1 = &a;          // reference
+    let a_mut_ref1 = &mut a;  // mutable reference
+    // let a_mut_ref2 = &mut a;  // この時点で a_ref1, a_mut_ref1 は存在しない
+    // let a_ref2 = &a;          // この時点で a_mut_ref2 は存在しない
+    *a_mut_ref1 = 30;
+    a = 20;
+    println!("{}", a);        // borrow check!! - Error!
+    //println!("{} {}", a_ref1, a_ref2); // borrow check!! - Error!
+    // println!("{}", a_ref2);   // borrow check!! - OK
+}
+```
 
 ---
 # コピートレイト
