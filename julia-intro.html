@@ -298,8 +298,19 @@ savefig(<span class="hljs-string">&quot;lsqfit-sample.png&quot;</span>)
 </span></span></foreignObject></svg></code></pre>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
-<h1><a href="https://docs.julialang.org/en/v1/stdlib/REPL/">UpdateJulia.jl</a></h1>
+<h1><a href="https://github.com/LilithHafner/UpdateJulia.jl">UpdateJulia.jl</a></h1>
 <p>Juliaのアップデートをコマンド1つで行える。</p>
+<ol>
+<li>パッケージモードから<code>add UpdateJulia</code>でインストールしておく</li>
+<li>新しいバージョンが出るたびに</li>
+</ol>
+<pre><code class="language-julia"><svg data-marp-fitting="svg" data-marp-fitting-code><foreignObject><span data-marp-fitting-svg-content><span data-marp-fitting-svg-content-wrap><span class="hljs-keyword">using</span> UpdateJulia
+update_julia()
+</span></span></foreignObject></svg></code></pre>
+<p>するだけでよい。</p>
+<ul>
+<li>アップデートするときはプリコンパイルされたファイルは読み込まずにREPLを起動することに注意。</li>
+</ul>
 </section>
 </foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-class="invert" data-theme="default" class="invert" style="--class:invert;--theme:default;">
 <h1>さらに詳しく</h1>
