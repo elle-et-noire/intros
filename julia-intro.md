@@ -238,8 +238,18 @@ savefig("lsqfit-sample.png")
 ```
 
 ---
-# [UpdateJulia.jl](https://docs.julialang.org/en/v1/stdlib/REPL/)
+# [UpdateJulia.jl](https://github.com/LilithHafner/UpdateJulia.jl)
 Juliaのアップデートをコマンド1つで行える。
+
+1. パッケージモードから`add UpdateJulia`でインストールしておく
+2. 新しいバージョンが出るたびに
+```julia
+using UpdateJulia
+update_julia()
+```
+するだけでよい。
+
+- アップデートするときはプリコンパイルされたファイルは読み込まずにREPLを起動することに注意。
 
 ---
 # さらに詳しく

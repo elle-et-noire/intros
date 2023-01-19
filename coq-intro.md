@@ -33,7 +33,7 @@ section {
 - **opam**：[Coq/SSReflect/MathCompの設定](https://staff.aist.go.jp/reynald.affeldt/ssrcoq/install.html#org35ada1b)に従って入れる。
   - `sudo apt get install`でなく`sudo apt install`
   - WSLでは「新しいライブラリの設定が要るかも」の箇所で`sudo apt install -y libgmp-dev`が必要だった([参考](https://www.aise.ics.saitama-u.ac.jp/~gotoh/Coq-SSReflect-MathCompOnUbuntu2004.html))
-  - `opam update`でアップデートできる（ビルドにかなり時間がかかるので注意）。
+  - `opam update`,`opam upgrade`でアップデートできる（ビルドにかなり時間がかかるので注意）。
 
 ---
 # エディタ
