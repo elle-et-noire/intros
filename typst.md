@@ -13,11 +13,21 @@ h1{
 }
 </style>
 
-# typst 入門
+# Typst 入門
 
 ---
 
-# なぜ typst なのか
+## LaTeX のコンパイル、遅くない...？
+
+
+
+## LaTeX のコマンド、長くない...？
+
+---
+
+
+
+# なぜ Typst なのか
 
 
 他の組版ソフトウェア（LaTeX、SATySFi など）に比べて
@@ -82,13 +92,38 @@ Markdown を思わせるシンプルな記法が用意されている。
 
 こちらも $\LaTeX$ よりシンプルな書き方ができる。
 
+$\LaTeX$ で
+```LaTeX
+$$\dfrac{\partial\mathcal{L}}{\partial q_i}-\dfrac{d}{dt}\dfrac{\partial\mathcal{L}}{\partial\dot{q}_i}=0$$
+```
+と書かなければいけないところが Typst では
+```Typst
+$ (diff cal(L)) / (diff q_i) - d / (d t) (diff cal(L)) / (diff dot(q_i)) = 0 $
+```
+で済む！
+
 ---
 
 # フォント
 
-`#set text(font: "Hiragino Kaku Gothic Pro")`のようにフォントを指定できる。
+- `#set text(font: "Hiragino Kaku Gothic Pro")`のようにフォントを指定できる。
 
-使えるフォントは`typst fonts`で確認できる。
+
+- 使えるフォントは`typst fonts`で確認できる。
+
+---
+
+# Typst のここがダメ！
+
+- 数式の細かい調整ができない
+  - 一文字だけローマン体にすることができない（自分調べ）
+  - スペースを調整できない（自分調べ）
+
+- デフォルトの組版が汚い
+  - セクション名とナンバリングの数字が近すぎる
+
+
+## 今後の進展に期待！
 
 ---
 
